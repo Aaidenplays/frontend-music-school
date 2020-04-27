@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
+import Registration from './auth/Registration'
+
 
 
 
@@ -24,6 +26,7 @@ export default class App extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.handleSuccessfulAuth = this.handleSuccessfulAuth.bind(this)
   }
+
 
   handleSuccessfulAuth (data) {
     const { history } = this.props;
@@ -77,6 +80,7 @@ export default class App extends Component {
     });
   }
 
+
   render() {
     return (
       <div className="app">
@@ -86,23 +90,13 @@ export default class App extends Component {
       userStatus={this.state.loggedInStatus}/>
       </div>
       {/* handling route destinations */}
-        <BrowserRouter>
+{/* {cosole.log(this.state.user.user_type)} */}
+        <BrowserRouter/>
+        <div>
           <Switch>
             <Route
-              exact
-              path={"/"}
-              render={props => (
-                <Home
-                  {...props}
-                  handleLogin={this.handleLogin}
-                  handleLogout={this.handleLogout}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
-              )}
-            />
-            <Route
-              exact
-              path={"/dashboard"}
+              // exact
+              path="/dashboard"
               render={props => (
                 <Dashboard
                   {...props}
@@ -111,9 +105,9 @@ export default class App extends Component {
               )}
             />
             <Route
-              exact
-              path={"/signin"}
-              render={props => (
+              // exact
+              path='/signin'
+              render={props => ( 
                 <Login
                   {...props}
                   handleLogin={this.handleLogin}
@@ -122,12 +116,12 @@ export default class App extends Component {
               )}
             />
             <Route
-              exact
-              path={"/register"}
+              // exact
+              path={'/register'}
               render={props => (
                 <Registration
                   {...props}
-                  loggedInStatus={this.state.loggedInStatus}
+                  handleSuccessfulAuth={this.handleSuccessfulAuth}
                 />
               )}
             />
@@ -161,8 +155,20 @@ export default class App extends Component {
                 />
               )}
             />
+            <Route
+              exact
+              path={"/"}
+              render={props => (
+                <Home
+                  {...props}
+                  handleLogin={this.handleLogin}
+                  handleLogout={this.handleLogout}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
           </Switch>
-        </BrowserRouter>
+          </div>
       </div> 
     );
   }
