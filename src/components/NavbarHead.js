@@ -56,6 +56,7 @@ export class NavbarHead extends Component {
       .catch(error => {
         console.log('logout error', error)
       })
+      // this.props.history.push('/signin')
   }
 
   render () {

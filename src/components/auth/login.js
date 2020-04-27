@@ -42,6 +42,7 @@ export class Login extends Component {
         console.log('login error', error)
       });
     event.preventDefault()
+    this.props.history.push('/dashboard')
   }
 
   render () {

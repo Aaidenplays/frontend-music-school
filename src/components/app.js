@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
+
+
 import Home from "./Home";
 import Dashboard from "./Dashboard";
 import { NavbarHead } from "./NavbarHead";
@@ -24,9 +26,10 @@ export default class App extends Component {
   }
 
   handleSuccessfulAuth (data) {
+    const { history } = this.props;
     this.handleLogin(data)
     // this.props.history.push('/dashboard')
-    return <Redirect to='/dashboard'/>
+    // return <Redirect to='/dashboard'/>
   }
 
   checkLoginStatus() {
