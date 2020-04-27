@@ -4,6 +4,10 @@ import axios from "axios";
 
 import Home from "./Home";
 import Dashboard from "./Dashboard";
+import { NavbarHead } from "./NavbarHead";
+import { Redirect } from 'react-router-dom'
+
+import Login from './auth/Login'
 
 export default class App extends Component {
   constructor() {
@@ -16,6 +20,13 @@ export default class App extends Component {
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleSuccessfulAuth = this.handleSuccessfulAuth.bind(this)
+  }
+
+  handleSuccessfulAuth (data) {
+    this.handleLogin(data)
+    // this.props.history.push('/dashboard')
+    return <Redirect to='/dashboard'/>
   }
 
   checkLoginStatus() {
@@ -66,6 +77,12 @@ export default class App extends Component {
   render() {
     return (
       <div className="app">
+      <div>
+      <NavbarHead 
+      handleLogout={this.handleLogout}
+      userStatus={this.state.loggedInStatus}/>
+      </div>
+      {/* handling route destinations */}
         <BrowserRouter>
           <Switch>
             <Route
@@ -90,9 +107,60 @@ export default class App extends Component {
                 />
               )}
             />
+            <Route
+              exact
+              path={"/signin"}
+              render={props => (
+                <Login
+                  {...props}
+                  handleLogin={this.handleLogin}
+                  handleSuccessfulAuth={this.handleSuccessfulAuth}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={"/register"}
+              render={props => (
+                <Registration
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={"/assignments"}
+              render={props => (
+                <Registration
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={"/instructors"}
+              render={props => (
+                <Registration
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={"/videos"}
+              render={props => (
+                <Registration
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
           </Switch>
         </BrowserRouter>
-      </div>
+      </div> 
     );
   }
 }

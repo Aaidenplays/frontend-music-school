@@ -32,9 +32,14 @@ export class Home extends Component {
       <div>
         <h1>HOME</h1>
         <h1>Status: {this.props.loggedInStatus}</h1>
+        {this.props.loggedInStatus === "LOGGED_IN" ?   
+        <div>
         <button onClick={() => this.handleLogoutClick()}>Logout</button>
+        </div>:
+        <div>
         <Registration handleSuccessfulAuth={this.handleSuccessfulAuth} />
         <Login handleSuccessfulAuth={this.handleSuccessfulAuth} />
+        </div>}
       </div>
     )
   }
