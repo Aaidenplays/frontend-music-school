@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
 import Registration from './auth/Registration'
-
+import Students from './students/Students'
 
 
 
@@ -12,6 +12,7 @@ import { NavbarHead } from "./NavbarHead";
 import { Redirect } from 'react-router-dom'
 
 import Login from './auth/Login'
+import Instructors from "./instructors/Instructors";
 
 export default class App extends Component {
   constructor() {
@@ -26,6 +27,8 @@ export default class App extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.handleSuccessfulAuth = this.handleSuccessfulAuth.bind(this)
   }
+  
+
 
 
   handleSuccessfulAuth (data) {
@@ -46,7 +49,8 @@ export default class App extends Component {
           this.setState({
             loggedInStatus: "LOGGED_IN",
             user: response.data.user
-          });
+          }),
+          this.findUserTypeData(response.data);
         } else if (
           !response.data.logged_in &
           (this.state.loggedInStatus === "LOGGED_IN")
@@ -54,12 +58,13 @@ export default class App extends Component {
           this.setState({
             loggedInStatus: "NOT_LOGGED_IN",
             user: {}
-          });
+          }),
+          this.findUserTypeData(response.data);
         }
       })
       .catch(error => {
         console.log("check login error", error);
-      });
+      })
   }
 
   componentDidMount() {
@@ -77,15 +82,43 @@ export default class App extends Component {
     this.setState({
       loggedInStatus: "LOGGED_IN",
       user: data.user
-    });
+    }),
+    this.findUserTypeData(data.user);
   }
 
+  //grab userTypes data
+    //for login
+  findUserTypeData = (user) => {
+    console.log("HELLO!", this.state.user.user_type)
+      if(this.state.user.user_type === 'STUDENT'){
+        axios.get('http://localhost:3001/students')
+        .then(response => this.findMe(response.data))
+      }
+      if(this.state.user.user_type === 'INSTRUCTOR'){
+        axios.get('http://localhost:3001/instructors')
+        .then(response => this.findMe(response.data))      
+      }
+  }
+
+      //findUserDataType 
+  findMe=(data)=> {
+    this.grabUserTypeData(data.find(el => this.state.user.id === el.user_id))
+  }
+
+    //for register
+  grabUserTypeData = (data) => {
+    this.setState({
+      userTypeData: data
+    })
+    console.log('success!: ', data)
+  }
 
   render() {
     return (
       <div className="app">
       <div>
       <NavbarHead 
+      userType={this.state.user.user_type}
       handleLogout={this.handleLogout}
       userStatus={this.state.loggedInStatus}/>
       </div>
@@ -122,6 +155,7 @@ export default class App extends Component {
                 <Registration
                   {...props}
                   handleSuccessfulAuth={this.handleSuccessfulAuth}
+                  grabUserTypeData={this.grabUserTypeData}
                 />
               )}
             />
@@ -139,6 +173,17 @@ export default class App extends Component {
               exact
               path={"/instructors"}
               render={props => (
+                <Instructors
+                  {...props}
+                  user={this.state.user}
+                  student={this.state.userTypeData}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={"/videos"}
+              render={props => (
                 <Registration
                   {...props}
                   loggedInStatus={this.state.loggedInStatus}
@@ -147,7 +192,17 @@ export default class App extends Component {
             />
             <Route
               exact
-              path={"/videos"}
+              path={"/students"}
+              render={props => (
+                <Students
+                  {...props}
+                  instructor={this.state.user.id}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={"/resources"}
               render={props => (
                 <Registration
                   {...props}

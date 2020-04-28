@@ -27,13 +27,13 @@ export default class Registration extends Component {
   handleSubmit (event) {
     const { email, password, password_confirmation } = this.state
     let type;
-    if(this.state.userType){
+    if(this.state.userType === true){
       type = 'STUDENT'
     }
-    else if(!this.state.userType){
+    else if(this.state.userType===false){
       type = 'INSTRUCTOR'
     }
-
+console.log("USERTYPE:::",type)
     axios
       .post(
         'http://localhost:3001/registrations',
@@ -42,7 +42,7 @@ export default class Registration extends Component {
             email: email,
             password: password,
             password_confirmation: password_confirmation,
-            type: type
+            user_type: type
           }
         },
         { withCredentials: true }
@@ -73,7 +73,7 @@ export default class Registration extends Component {
           },
         )
         .then(response => {
-          console.log(response)
+          this.props.grabUserTypeData(response.data);
         })
         .catch(error => {
           console.log('registration error', error)
@@ -89,7 +89,7 @@ export default class Registration extends Component {
         },
       )
       .then(response => {
-        console.log(response)
+        this.props.grabUserTypeData(response.data);
       })
       .catch(error => {
         console.log('registration error', error)

@@ -38,7 +38,6 @@ export class Login extends Component {
       .then(response => {
         if (response.data.logged_in) {
           this.props.handleSuccessfulAuth(response.data)
-          console.log(response.data)
         }
       })
       .catch(error => {
