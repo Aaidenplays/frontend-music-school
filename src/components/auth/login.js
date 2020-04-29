@@ -8,8 +8,10 @@ export class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      loginErrors: ''
+      loginErrors: '',
+      // userType: false
     }
+    // this.handleChecked = this.handleChecked.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
@@ -34,20 +36,31 @@ export class Login extends Component {
         { withCredentials: true }
       )
       .then(response => {
-        if (response.data.logged_in){
-        this.props.handleSuccessfulAuth(response.data);
+        if (response.data.logged_in) {
+          this.props.handleSuccessfulAuth(response.data)
         }
       })
       .catch(error => {
         console.log('login error', error)
-      });
+      })
     event.preventDefault()
+    this.props.history.push('/dashboard')
   }
+
+  // handleChecked () {
+  //   this.setState({
+  //     userType: !(this.state.userType)
+  //   });
+  //   //false = student
+  //   //true = instructor
+  // }
 
   render () {
     return (
       <div>
-        <form on onSubmit={this.handleSubmit}>
+        <br />
+        <br />
+        <form onSubmit={this.handleSubmit}>
           <input
             type='email'
             name='email'
@@ -64,8 +77,13 @@ export class Login extends Component {
             onChange={this.handleChange}
             required
           />
-
-          <button type='submit'>Login</button>
+          {/* <label className='switch centered-element'>
+            <input type='checkbox' onChange={this.handleChecked} />
+            <div className='slider'></div>
+          <h3 className='toggle-label-right'>Student</h3>
+            <h3 className='toggle-label-left'>Instructor</h3>
+          </label> */}
+          <button  type='submit'>Login</button>
         </form>
       </div>
     )
