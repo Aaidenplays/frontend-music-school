@@ -11,11 +11,11 @@ export class StudentCard extends Component {
     axios
       .post('http://localhost:3001/instructor_requests', 
       {
-        instructor: this.props.instructor,
+        instructor: this.props.instructor.id,
         student: this.props.student.id,
         status: 'pending'
       })
-      .then(response => console.log('RESPONSE:::', response))
+      .then(response => console.log('RESPONSE:::', response.data))
       .catch(error => {
         console.log('registration error', error)
       })

@@ -27,6 +27,7 @@ export class Students extends Component {
 
   //render student cards
   renderStudentCards = (students) => {
+      console.log("instructor-prop: ", this.props.instructor.id)
     return students.map((student, idx) => { 
           return <div key={idx}>
              <StudentCard student={student} instructor={this.props.instructor} />

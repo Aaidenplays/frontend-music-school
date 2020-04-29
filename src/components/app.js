@@ -20,7 +20,8 @@ export default class App extends Component {
 
     this.state = {
       loggedInStatus: "NOT_LOGGED_IN",
-      user: {}
+      user: {},
+      userTypeData: {}
     };
 
     this.handleLogin = this.handleLogin.bind(this);
@@ -50,7 +51,7 @@ export default class App extends Component {
             loggedInStatus: "LOGGED_IN",
             user: response.data.user
           }),
-          this.findUserTypeData(response.data);
+          this.getUserData(response.data.user.id);
         } else if (
           !response.data.logged_in &
           (this.state.loggedInStatus === "LOGGED_IN")
@@ -59,7 +60,7 @@ export default class App extends Component {
             loggedInStatus: "NOT_LOGGED_IN",
             user: {}
           }),
-          this.findUserTypeData(response.data);
+          this.getUserData(response.data.user.id);
         }
       })
       .catch(error => {
@@ -78,17 +79,25 @@ export default class App extends Component {
     });
   }
 
+  getUserData = (id) => {
+    console.log('made it:::',id)
+    axios.get(`http://localhost:3001/users/${id}`)
+    .then(response => this.grabUserTypeData(response.data))
+  }
+
   handleLogin(data) {
     this.setState({
       loggedInStatus: "LOGGED_IN",
       user: data.user
     }),
-    this.findUserTypeData(data.user);
+    console.log('USER:::',data.user)
+    this.getUserData('USERDATA:::',data.id);
   }
 
   //grab userTypes data
     //for login
   findUserTypeData = (user) => {
+    console.log()
     console.log("HELLO!", this.state.user.user_type)
       if(this.state.user.user_type === 'STUDENT'){
         axios.get('http://localhost:3001/students')
@@ -196,7 +205,7 @@ export default class App extends Component {
               render={props => (
                 <Students
                   {...props}
-                  instructor={this.state.user.id}
+                  instructor={this.state.userTypeData}
                 />
               )}
             />

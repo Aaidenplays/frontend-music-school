@@ -36,7 +36,7 @@ export default class Registration extends Component {
 console.log("USERTYPE:::",type)
     axios
       .post(
-        'http://localhost:3001/registrations',
+        'http://localhost:3001/users',
         {
           user: {
             email: email,
