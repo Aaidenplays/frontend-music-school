@@ -7,7 +7,11 @@ export class Students extends Component {
         super(props)
 
         this.state={
-            students: []
+            students: [],
+            myStudents: [],
+            instructor: {},
+            status: 'NOT_STATED',
+            pendingRequests: []
         }
     }
 
@@ -16,6 +20,35 @@ export class Students extends Component {
     axios
       .get('http://localhost:3001/students')
       .then(response => this.setStudents(response.data))
+  }
+
+  componentDidUpdate() {
+      if(this.props.instructor.instructor && this.state.status !== 'STATED'){
+          this.setState({
+              instructor: this.props.instructor.instructor,
+              status: 'STATED'
+          })
+          this.setPendingRequests(this.props.instructor.instructor.instructor_requests)
+      }
+  }
+
+  setPendingRequests = (requests) => {
+    const filteredRequests = requests.filter(request => {
+        return request.status === 'pending'
+    })
+    this.setState({
+        pendingRequests: filteredRequests
+    })
+    this.setMyStudents(requests)
+  }
+
+  setMyStudents = (requests) => {
+    const filteredRequests = requests.filter(request => {
+        return request.status === 'accepted'
+   })
+   this.setState({
+    myStudents: filteredRequests
+})
   }
 
   setStudents = (students) => {
@@ -35,24 +68,22 @@ export class Students extends Component {
   })
   }
 
-//   filterYourStudents = (students) => {
-//     let acceptedRequests
-//      students.map((student, idx) => { 
-//         key={idx}
-//         acceptedRequests = (student.instructor_requests.filter(request => {
-//             request.status === 'accepted', request.instructor_id === this.props.instructor.id
-//         }))
-//     },
-//     this.renderYourStudentCards(acceptedRequests)
-// }
+  renderMyStudents = (students) => {
+    return students.map((student, idx) => { 
+        return <div key={idx}>
+           <StudentCard student={student} instructor={this.props.instructor} status={true} history={this.props.history}/>
+        </div>
+  })
+}
 
-    renderYourStudentCards = () => {
-        acceptedRequests.map((student,idx) => {
-            return <div key={idx}>
-            <StudentCard student={student} instructor={this.props.instructor} />
-            </div>
-    })     
-  }
+
+//     renderYourStudentCards = () => {
+//         acceptedRequests.map((student,idx) => {
+//             return <div key={idx}>
+//             <StudentCard student={student} instructor={this.props.instructor} />
+//             </div>
+//     })     
+//   }
 
   render () {
     return (
@@ -60,10 +91,11 @@ export class Students extends Component {
     {/* {this.renderAllStudents()} */}
     <div>
         <h1>Your Students</h1>
-        {/* this.renderYourStudents(this.state.students) */}
+        {this.renderMyStudents(this.state.myStudents)}
     </div>
     <div>
         <h1>Pending Requests</h1>
+        {this.renderMyStudents(this.state.pendingRequests)}
     </div>
     <div> 
     <h1>All Students</h1>

@@ -8,62 +8,11 @@ export class Instructors extends Component {
 
     this.state = {
       instructors: [],
-      myInstructors: [],
       status: 'NOT_STATED',
-      student: {}
+      student: {},
+      pendingRequests: []
     }
   }
-
-  //render invites from instructors
-//   componentDidMount () {
-//     console.log('mounting....')
-//     console.log('PROPS STUDEnTS:::',this.props.student)
-//     axios
-//       .get('http://localhost:3001/instructor_requests')
-//       .then(response => {
-//           this.setInstructors(response.data)
-//           this.filterMyInstructors(response.data)
-//         })
-//       .catch(error => {
-//         console.log('GET error: ', error)
-//       })
-//   }
-
-//   filterMyInstructors = instructors => {
-//     console.log('made it!')
-//     // if (this.props.student) {
-//       console.log('Instructors::: ', instructors)
-//     //   const filteredInstructors = 
-//       this.setMyInstructors(
-//         instructors.filter(instructor => {
-//           console.log('STUDENT:', this.props.student)
-//           // console.log(instructor.student_id)
-//           instructor.student_id === this.props.student.id
-//         })
-//       )
-//       // if(this.state.instructors != filteredInstructors){
-//       // this.setInstructors(filteredInstructors)
-//     //   }
-//     // }
-//   }
-
-//   setInstructors = instructors => {
-//     this.setState({
-//       instructors: instructors
-//     })
-//   }
-
-//   setMyInstructors = instructors => {
-//     this.setState({
-//       myInstructors: instructors
-//     })
-//   }
-
-//   simpleRenderConditional = () => {
-//     if (this.state.instructors.length > 1) {
-//       this.filterMyInstructors(this.state.instructors)
-//     }
-//   }
 
   componentDidMount(){
 
@@ -76,6 +25,7 @@ componentDidUpdate(){
         student: this.props.student.student,
         status: 'STATED'
     })
+    this.setPendingRequests(this.props.student.student.instructor_requests)
     }
   }
 
@@ -83,15 +33,60 @@ componentDidUpdate(){
   renderInstructorRequests = (requests) => {
       if(requests){
           return requests.map((request, idx) => {
-              return <InstructorCard key={idx} request={request} instructor={this.state.student.instructor_requests[idx].instructor}/>
+              return <InstructorCard key={idx} change={this.handleChange} request={request} instructor={this.state.student.instructor_requests[idx].instructor}/>
           })
       }
   }
 
+  renderInstructors = (requests) => {
+      if (requests){
+          return requests.map((request,idx)=> {
+              return <InstructorCard key={idx} change={this.handleChange} status={true} request={request} instructor={request.instructor}/>
+          })
+      }
+  }
+
+  setPendingRequests = (requests) => {
+      console.log('setPendingRequests status: ACCESSED: ', requests[0].status)
+    const filteredRequests = requests.filter(request => {
+        return request.status === 'pending'
+    })
+    console.log(filteredRequests)
+    this.setState({
+        pendingRequests: filteredRequests
+    })
+    this.setInstructors(requests)
+  }
+
+  setInstructors = (requests) => {
+    const filteredRequests = requests.filter(request => {
+         return request.status === 'accepted'
+    })
+    console.log('setInstructors status: ACCESSED:',filteredRequests)
+    this.setState({
+        instructors: filteredRequests
+    })
+  }
+
+    handleChange = () => {
+        this.setState({
+            status: 'NOT_STATED'
+        })
+        console.log('HANDLING CHANGES...', this.state.status)
+    }
+
   render () {
     return (
     <div>
-        {this.renderInstructorRequests(this.state.student.instructor_requests)}
+        <div>
+            <h1>My Instructors</h1>
+            {this.renderInstructors(this.state.instructors)}
+        </div>
+        <div>
+
+        </div>
+        <h1>Pending Instructor Requests</h1>
+        {this.renderInstructorRequests(this.state.pendingRequests)}
         {console.log('RENDER', this.props.student)}
     </div>
     )

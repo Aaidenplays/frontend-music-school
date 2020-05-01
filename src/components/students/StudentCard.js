@@ -2,9 +2,20 @@ import React, { Component } from 'react'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import axios from 'axios'
+import DeployAssignment from './DeployAssignment'
+// import {withRouter} from 'react-router-dom'
+import { withRouter, Redirect } from "react-router-dom";
+
 
 export class StudentCard extends Component {
   //handle invite btn
+  constructor(){
+      super()
+
+      this.state={
+          toDeployStudents: false
+      }
+  }
 
   handleInv = event => {
     console.log('EVENT:::', this.props.student.id)
@@ -21,9 +32,35 @@ export class StudentCard extends Component {
       })
   }
 
+  handleDelete = () => {
+    axios.delete(`http://localhost:3001/instructor_requests/${this.props.student.id}`)
+    .then(resp => console.log(resp))
+  }
+
+  handleDeployAssignmentClick = () => {
+    //   return <DeployAssignment />
+    // <Link to = {{
+    //     pathname: '/deploy-assignments',
+    //     state: {
+    //         list: this.props
+    //     }
+    // }} />
+    // return <Redirect to='/deploy-assignments'/>
+    //   this.props.history.push('/deploy-assignments')
+    this.setState({
+        toDeployStudents: true
+    })
+  }
+
   render () {
     return (
       <div>
+      {this.state.toDeployStudents ? <Redirect to={{
+      pathname: '/deploy-assignments',
+      state: {student: this.props.student,
+              instructor: this.props.instructor}
+      }}/>
+       : null}
         <Card style={{ width: '18rem' }}>
           <Card.Img variant='top' src='holder.js/100px180' />
           <Card.Body>
@@ -32,9 +69,17 @@ export class StudentCard extends Component {
               Some quick example text to build on the card title and make up the
               bulk of the card's content.
             </Card.Text>
+            {this.props.status ? 
+                <Button onClick={this.handleDeployAssignmentClick} variant='primary'>
+              Deploy Assignment
+            </Button>            :
             <Button onClick={this.handleInv} variant='primary'>
               Invite To Your Classroom
-            </Button>
+            </Button>}
+            {this.props.status ? 
+                <Button onClick={this.handleDelete} variant='primary'>
+              Remove
+            </Button> : null}
           </Card.Body>
         </Card>
       </div>
@@ -42,4 +87,4 @@ export class StudentCard extends Component {
   }
 }
 
-export default StudentCard
+export default withRouter(StudentCard)

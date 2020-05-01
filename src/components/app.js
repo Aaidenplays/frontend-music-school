@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
 import Registration from './auth/Registration'
 import Students from './students/Students'
-
+import ViewAssignment from './Assignments/ViewAssignment'
 
 
 import Home from "./Home";
@@ -13,6 +13,8 @@ import { Redirect } from 'react-router-dom'
 
 import Login from './auth/Login'
 import Instructors from "./instructors/Instructors";
+import DeployAssignment from "./students/DeployAssignment";
+import Assignments from "./Assignments/Assignments";
 
 export default class App extends Component {
   constructor() {
@@ -91,7 +93,7 @@ export default class App extends Component {
       user: data.user
     }),
     console.log('USER:::',data.user)
-    this.getUserData('USERDATA:::',data.id);
+    this.getUserData(data.user.id);
   }
 
   //grab userTypes data
@@ -172,9 +174,9 @@ export default class App extends Component {
               exact
               path={"/assignments"}
               render={props => (
-                <Registration
+                <Assignments
                   {...props}
-                  loggedInStatus={this.state.loggedInStatus}
+                  student={this.state.userTypeData}
                 />
               )}
             />
@@ -211,6 +213,15 @@ export default class App extends Component {
             />
             <Route
               exact
+              path={"/view-assignment"}
+              render={props => (
+                <ViewAssignment
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              exact
               path={"/resources"}
               render={props => (
                 <Registration
@@ -219,6 +230,17 @@ export default class App extends Component {
                 />
               )}
             />
+          <Route
+              exact
+              path={"/deploy-assignments"}
+              render={props => (
+                <DeployAssignment
+                  {...props}
+                student={this.props.student}
+                instructor={this.props.instructor}
+                />
+              )}
+            />             
             <Route
               exact
               path={"/"}
