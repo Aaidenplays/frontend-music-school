@@ -34,8 +34,17 @@ export class ViewAssignment extends Component {
         {
             video: data.id,
             assignment: this.props.location.state.assignment.id
-        }).then(resp => console.log('DATA:::',data,"VA:::", resp.data))
+        }).then(resp => this.patchAssignment(resp.data))
     }
+
+    patchAssignment = (data) => {
+        console.log(data)
+        axios.patch(`http://localhost:3001/assignments/${this.props.location.state.assignment.id}`,
+        {
+            status: "submitted"
+        }).then(resp => console.log(resp.data))
+    } 
+
   render () {
     return (
       <div>

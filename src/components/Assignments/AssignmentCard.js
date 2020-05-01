@@ -3,6 +3,8 @@ import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import axios from 'axios'
 import { withRouter, Redirect } from "react-router-dom";
+import ViewAssignment from './ViewAssignment';
+import ViewAssignmentAsInstructor from './ViewAssignmentAsInstructor';
 
 
 export class AssignmentCard extends Component {
@@ -10,7 +12,8 @@ export class AssignmentCard extends Component {
         super() 
 
         this.state = {
-            toViewAssignment: false
+            toViewAssignment: false,
+            toViewAssignmentAsInstructor: false
         }
     }
 
@@ -20,9 +23,25 @@ export class AssignmentCard extends Component {
         })
     }
 
+    renderInstructorButton = () => {
+        return <Button onClick={this.handleInstructorButtonClick} variant='primary'>Provide Feedback</Button>
+    }
+    
+    handleInstructorButtonClick = (event) => {
+        // return <ViewAssignmentAsInstructor fromInstructor={this.props.fromInstructor} />
+        //pass props assignment
+        this.setState({
+            toViewAssignmentAsInstructor: true
+        })
+    }
+
   render () {
     return (
       <div>
+      {this.state.toViewAssignmentAsInstructor ? <Redirect to={{
+          pathname: '/view-assignment-as-instructor',
+          state: {assignment: this.props.assignment}
+      }}/>:null}
       {this.state.toViewAssignment ? <Redirect to={{
           pathname: '/view-assignment',
           state: {assignment: this.props.assignment}
@@ -34,9 +53,10 @@ export class AssignmentCard extends Component {
             <Card.Text>
                 {this.props.assignment.description}
             </Card.Text>
-              <Button onClick={this.handleView} variant='primary'>
+      {this.props.fromInstructor ? this.renderInstructorButton(this.props.assignment) : <Button onClick={this.handleView} variant='primary'>
                 view
-              </Button>
+              </Button>}
+
           </Card.Body>
         </Card>
       </div>

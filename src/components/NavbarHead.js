@@ -66,7 +66,7 @@ export class NavbarHead extends Component {
               <NavLink className="nav-space d-inline p-2 bg-dark text-white"
               to='/students'>Students</NavLink>
               <NavLink className="nav-space d-inline p-2 bg-dark text-white"
-              to="/assignments">Deployed Assignments</NavLink>
+              to="/deployed-assignments">Deployed Assignments</NavLink>
               <NavLink className="nav-space d-inline p-2 bg-dark text-white"
               to="/resources">Resources</NavLink>
             </Nav>

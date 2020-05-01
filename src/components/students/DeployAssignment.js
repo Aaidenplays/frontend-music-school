@@ -25,7 +25,8 @@ export class DeployAssignment extends Component {
     {
         student: this.props.location.state.student.id,
         instructor: this.props.location.state.instructor.id,
-        description: this.state.description
+        description: this.state.description,
+        status: 'pending'
     }).then(resp => window.alert('Assignment Deployed'))
   }
 
