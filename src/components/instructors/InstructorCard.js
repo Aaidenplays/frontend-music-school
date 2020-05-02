@@ -10,13 +10,13 @@ export class InstructorCard extends Component {
         {
             status: 'accepted'
         })
-        .then(resp => this.props.change());
+        .then(resp => this.props.accept(resp.data));
 
     }
 
     handleDelete = () => {
         axios.delete(`http://localhost:3001/instructor_requests/${this.props.request.id}`)
-        .then(resp => this.props.change())
+        .then(resp => this.props.delete(this.props.request))
     }
 
   render () {

@@ -138,6 +138,7 @@ export default class App extends Component {
         </div>
         {/* handling route destinations */}
         {/* {cosole.log(this.state.user.user_type)} */}
+        <div>
         <BrowserRouter />
         <div>
           <Switch>
@@ -264,6 +265,7 @@ export default class App extends Component {
               )}
             />
           </Switch>
+          </div>
         </div>
       </div>
     )

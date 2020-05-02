@@ -14,10 +14,6 @@ export class Instructors extends Component {
     }
   }
 
-  componentDidMount(){
-
-}
-
 componentDidUpdate(){
     console.log('made it!!!')
     if(this.props.student.student && this.state.status !== 'STATED'){
@@ -33,7 +29,7 @@ componentDidUpdate(){
   renderInstructorRequests = (requests) => {
       if(requests){
           return requests.map((request, idx) => {
-              return <InstructorCard key={idx} change={this.handleChange} request={request} instructor={this.state.student.instructor_requests[idx].instructor}/>
+              return <InstructorCard key={idx} accept={this.handleAccept} change={this.handleChange} request={request} instructor={this.state.student.instructor_requests[idx].instructor}/>
           })
       }
   }
@@ -41,7 +37,7 @@ componentDidUpdate(){
   renderInstructors = (requests) => {
       if (requests){
           return requests.map((request,idx)=> {
-              return <InstructorCard key={idx} change={this.handleChange} status={true} request={request} instructor={request.instructor}/>
+              return <InstructorCard key={idx} delete={this.handleDelete} change={this.handleChange}  status={true} request={request} instructor={request.instructor}/>
           })
       }
   }
@@ -73,6 +69,26 @@ componentDidUpdate(){
             status: 'NOT_STATED'
         })
         console.log('HANDLING CHANGES...', this.state.status)
+    }
+
+    handleAccept = (instructor) => {
+        //should be pending requests
+        const instructorsOmitAccepted = this.state.pendingRequests.filter(inst => {
+           return inst.instructor.id !== instructor.instructor.id
+        })
+        this.setState({
+            instructors: [...this.state.instructors, instructor],
+            pendingRequests: instructorsOmitAccepted
+        })
+    }
+
+    handleDelete = (instructor) => {
+        const instructorsOmitDeleted = this.state.instructors.filter(inst => {
+            return inst.instructor.id !== instructor.instructor.id
+         })
+         this.setState({
+             instructors: instructorsOmitDeleted
+         })
     }
 
   render () {

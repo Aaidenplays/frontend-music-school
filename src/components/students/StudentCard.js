@@ -26,7 +26,8 @@ export class StudentCard extends Component {
         student: this.props.student.id,
         status: 'pending'
       })
-      .then(response => console.log('RESPONSE:::', response.data))
+      .then(response => this.props.inviteSent(response.data))
+        // console.log('RESPONSE:::', response.data))
       .catch(error => {
         console.log('registration error', error)
       })
@@ -35,18 +36,16 @@ export class StudentCard extends Component {
   handleDelete = () => {
     axios.delete(`http://localhost:3001/instructor_requests/${this.props.student.id}`)
     .then(resp => console.log(resp))
+    this.props.remove(this.props.student)
+  }
+
+  handleCancel = () => {
+    axios.delete(`http://localhost:3001/instructor_requests/${this.props.student.id}`)
+    .then(resp => console.log(resp))
+      this.props.cancel(this.props.student)
   }
 
   handleDeployAssignmentClick = () => {
-    //   return <DeployAssignment />
-    // <Link to = {{
-    //     pathname: '/deploy-assignments',
-    //     state: {
-    //         list: this.props
-    //     }
-    // }} />
-    // return <Redirect to='/deploy-assignments'/>
-    //   this.props.history.push('/deploy-assignments')
     this.setState({
         toDeployStudents: true
     })
@@ -64,22 +63,32 @@ export class StudentCard extends Component {
         <Card style={{ width: '18rem' }}>
           <Card.Img variant='top' src='holder.js/100px180' />
           <Card.Body>
+          {this.props.student.student ? 
+            <Card.Title>{this.props.student.student.name}</Card.Title>
+            :
             <Card.Title>{this.props.student.name}</Card.Title>
+             }
             <Card.Text>
               Some quick example text to build on the card title and make up the
               bulk of the card's content.
             </Card.Text>
-            {this.props.status ? 
+            {this.props.remove ? 
                 <Button onClick={this.handleDeployAssignmentClick} variant='primary'>
               Deploy Assignment
-            </Button>            :
+            </Button>            :null}
+            {this.props.inviteSent ? 
             <Button onClick={this.handleInv} variant='primary'>
               Invite To Your Classroom
-            </Button>}
-            {this.props.status ? 
+            </Button>: null}
+            {this.props.remove ? 
                 <Button onClick={this.handleDelete} variant='primary'>
               Remove
             </Button> : null}
+            {this.props.cancel ? 
+                <Button onClick={this.handleCancel} variant='primary'>
+              Cancel
+            </Button>
+            :null}
           </Card.Body>
         </Card>
       </div>

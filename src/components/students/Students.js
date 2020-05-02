@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import StudentCard from './StudentCard'
+import Nav from 'react-bootstrap/Nav'
+
 
 export class Students extends Component {
     constructor(props){
@@ -11,9 +13,12 @@ export class Students extends Component {
             myStudents: [],
             instructor: {},
             status: 'NOT_STATED',
-            pendingRequests: []
+            pendingRequests: [],
+            selected: 'my-students'
         }
     }
+
+
 
   /* render all students*/
   componentDidMount = () => {
@@ -30,6 +35,30 @@ export class Students extends Component {
           })
           this.setPendingRequests(this.props.instructor.instructor.instructor_requests)
       }
+  }
+
+  removeStudent = (student) => {
+    const studentsOmitRemoved= this.state.myStudents.filter(stud => {
+        return stud.student.id !== student.student.id
+    })
+    this.setState({
+        myStudents: studentsOmitRemoved
+    })
+  }
+
+  inviteSent = (student) => {
+      this.setState({
+          pendingRequests: [...this.state.pendingRequests, student]
+      })
+  }
+
+  removePendingStudent = (student) => {
+    const studentsOmitRemoved= this.state.pendingRequests.filter(stud => {
+        return stud.id !== student.id
+    })
+    this.setState({
+        pendingRequests: studentsOmitRemoved
+    })
   }
 
   setPendingRequests = (requests) => {
@@ -63,7 +92,7 @@ export class Students extends Component {
       console.log("instructor-prop: ", this.props.instructor.id)
     return students.map((student, idx) => { 
           return <div key={idx}>
-             <StudentCard student={student} instructor={this.props.instructor} />
+             <StudentCard inviteSent={this.inviteSent} student={student} instructor={this.props.instructor}/>
           </div>
   })
   }
@@ -71,11 +100,18 @@ export class Students extends Component {
   renderMyStudents = (students) => {
     return students.map((student, idx) => { 
         return <div key={idx}>
-           <StudentCard student={student} instructor={this.props.instructor} status={true} history={this.props.history}/>
+           <StudentCard remove={this.removeStudent} student={student} instructor={this.props.instructor} status={true} history={this.props.history}/>
         </div>
   })
 }
 
+renderPendingStudents = (students) => {
+    return students.map((student, idx) => { 
+        return <div key={idx}>
+           <StudentCard cancel={this.removePendingStudent} student={student} instructor={this.props.instructor} pendingStatus={true} history={this.props.history}/>
+        </div>
+  })
+}
 
 //     renderYourStudentCards = () => {
 //         acceptedRequests.map((student,idx) => {
@@ -85,22 +121,57 @@ export class Students extends Component {
 //     })     
 //   }
 
+    handleSelect = (event) => {
+        this.setState({
+            selected: `${event}`
+        })
+    }
+
+    renderSelectedTab = (selected) => {
+        switch (selected){
+            case 'my-students': 
+               return this.renderMyStudents(this.state.myStudents)
+            case 'pending-requests':
+                return this.renderPendingStudents(this.state.pendingRequests)
+            case 'all-students':
+                return this.renderAllStudentCards(this.state.students)
+        }
+    }
+
   render () {
     return (
-    <div>
+    <div><br/>
     {/* {this.renderAllStudents()} */}
-    <div>
+    <Nav
+            variant='tabs'
+            defaultActiveKey='/submitted'
+            onSelect={this.handleSelect}
+          >
+            <Nav.Item>
+              <Nav.Link eventKey='my-students'>My Students</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey='pending-requests'>Pending Requests</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey='all-students'>All Students</Nav.Link>
+            </Nav.Item>
+          </Nav>
+          <div>
+              {this.renderSelectedTab(this.state.selected)}
+          </div>
+    {/* <div>
         <h1>Your Students</h1>
         {this.renderMyStudents(this.state.myStudents)}
     </div>
     <div>
         <h1>Pending Requests</h1>
-        {this.renderMyStudents(this.state.pendingRequests)}
+        {this.renderPendingStudents(this.state.pendingRequests)}
     </div>
     <div> 
     <h1>All Students</h1>
     {this.renderAllStudentCards(this.state.students)}
-    </div>
+    </div> */}
     </div>
     )
   }
