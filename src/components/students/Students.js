@@ -160,18 +160,6 @@ renderPendingStudents = (students) => {
           <div>
               {this.renderSelectedTab(this.state.selected)}
           </div>
-    {/* <div>
-        <h1>Your Students</h1>
-        {this.renderMyStudents(this.state.myStudents)}
-    </div>
-    <div>
-        <h1>Pending Requests</h1>
-        {this.renderPendingStudents(this.state.pendingRequests)}
-    </div>
-    <div> 
-    <h1>All Students</h1>
-    {this.renderAllStudentCards(this.state.students)}
-    </div> */}
     </div>
     )
   }

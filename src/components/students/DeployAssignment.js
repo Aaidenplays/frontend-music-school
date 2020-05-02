@@ -23,8 +23,8 @@ export class DeployAssignment extends Component {
       event.preventDefault();
     axios.post('http://localhost:3001/assignments',
     {
-        student: this.props.location.state.student.id,
-        instructor: this.props.location.state.instructor.id,
+        student: this.props.location.state.student.student.id,
+        instructor: this.props.location.state.student.instructor.id,
         description: this.state.description,
         status: 'pending'
     }).then(resp => window.alert('Assignment Deployed'))
