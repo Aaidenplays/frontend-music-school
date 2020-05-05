@@ -111,7 +111,7 @@ componentDidUpdate(){
 
   render () {
     return (
-    <div><br/>
+    <div><br/><br/><br/>
         {/* <div> */}
         <Nav
             variant='tabs'

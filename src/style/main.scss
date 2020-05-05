@@ -22,6 +22,37 @@ h3{
     color: white;
 }
 
+.image{
+  width: 100px;
+  height: 100px;
+}
+.instrument-card-size{
+  width: 500px;
+  height: 250px;
+  // filter: grayscale(100%);
+}
+
+.instrument-image-size{
+  width: 500px;
+  height: 250px;
+  filter: grayscale(100%);
+}
+
+.card:hover{
+  transform: scale(1.05);
+}
+
+.card-clicked{
+  width: 500px;
+  height: 250px;
+  filter: grayscale(0%);
+  transform: scale(1.05);
+}
+
+.card:active{
+  filter: grayscale(0%)
+}
+
 body {
     overflow-x: hidden;
     font-weight: normal;

@@ -134,6 +134,7 @@ export default class App extends Component {
             userType={this.state.user.user_type}
             handleLogout={this.handleLogout}
             userStatus={this.state.loggedInStatus}
+            userTypeData={this.state.userTypeData}
           />
         </div>
         {/* handling route destinations */}

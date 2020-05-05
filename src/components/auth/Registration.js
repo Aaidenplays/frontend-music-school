@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import Instruments from '../instruments/Instruments'
 
 export default class Registration extends Component {
   constructor (props) {
@@ -11,7 +12,8 @@ export default class Registration extends Component {
       password_confirmation: '',
       registrationErrors: '',
       userType: false,
-      name: ' '
+      name: ' ',
+      chosenInstruments: []
     }
     this.handleChecked = this.handleChecked.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -49,7 +51,7 @@ console.log("USERTYPE:::",type)
       )
       .then(response => {
         if (response.data.status === 'created') {
-          this.props.handleSuccessfulAuth(response.data)
+          this.props.handleSuccessfulAuth(response.data);
           this.handleUserType(response.data.user)
         }
       })
@@ -73,6 +75,7 @@ console.log("USERTYPE:::",type)
           },
         )
         .then(response => {
+          this.createUserInstruments(response.data);
           this.props.grabUserTypeData(response.data);
         })
         .catch(error => {
@@ -89,11 +92,36 @@ console.log("USERTYPE:::",type)
         },
       )
       .then(response => {
+        this.createUserInstruments(response.data)
         this.props.grabUserTypeData(response.data);
       })
       .catch(error => {
         console.log('registration error', error)
       })
+    }
+  }
+
+  createUserInstruments = (user) => {
+    console.log("CREATING USER INSTRUMENTS:::", user)
+    if(user.user.user_type === 'INSTRUCTOR'){
+      this.state.chosenInstruments.map((inst, idx)=>(
+        axios.post('http://localhost:3001/user_instruments',
+        {
+          instrument: inst.id,
+          instructor: user.id
+        })
+        .then(resp => console.log(resp.data))
+      ))
+    }
+    else if(user.user.user_type === 'STUDENT'){
+      this.state.chosenInstruments.map((inst, idx)=>(
+        axios.post('http://localhost:3001/user_instruments',
+        {
+          instrument: inst.id,
+          student: user.id
+        })
+        .then(resp => console.log(resp.data))
+      ))
     }
   }
 
@@ -103,6 +131,31 @@ console.log("USERTYPE:::",type)
     })
     //false = student
     //true = instructor
+  }
+
+  grabInstruments = (instruments) => {
+    this.setState({
+      instruments: instruments
+    })
+  }
+
+  addToChosenInstruments = instrument => {
+    this.setState({
+      chosenInstruments: [...this.state.chosenInstruments, instrument]
+    })
+    // (this.props.grabInstruments(this.state.chosenInstruments))
+  }
+
+  removeFromChosenInstruments = inst => {
+    const intsrumentsOmitRemoved = this.state.chosenInstruments.filter(
+      instrument => {
+        return instrument.id !== inst.id
+      }
+    )
+    this.setState({
+      chosenInstruments: intsrumentsOmitRemoved
+    })
+    // this.props.grabInstruments(this.state.chosenInstruments)
   }
 
   render () {
@@ -156,6 +209,8 @@ console.log("USERTYPE:::",type)
           <br />
           <button type='submit'>Register</button>
         </form>
+
+        <Instruments addToChosenInstruments={this.addToChosenInstruments} removeFromChosenInstruments={this.removeFromChosenInstruments}/>
       </div>
     )
   }
