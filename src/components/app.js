@@ -17,6 +17,8 @@ import Assignments from './Assignments/Assignments'
 import Video from './videos/Video'
 import DeployedAssignments from './Assignments/DeployedAssignments'
 import ViewAssignmentAsInstructor from './Assignments/ViewAssignmentAsInstructor'
+import Resources from './resources/Resources'
+import AddResources from './resources/AddResources'
 
 export default class App extends Component {
   constructor () {
@@ -216,9 +218,19 @@ export default class App extends Component {
               exact
               path={'/resources'}
               render={props => (
-                <Registration
+                <Resources
                   {...props}
-                  loggedInStatus={this.state.loggedInStatus}
+                  userData={this.state.userTypeData}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={'/add-resource'}
+              render={props => (
+                <AddResources
+                  {...props}
+                  // userData={this.state.userTypeData}
                 />
               )}
             />

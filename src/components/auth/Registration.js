@@ -13,7 +13,8 @@ export default class Registration extends Component {
       registrationErrors: '',
       userType: false,
       name: ' ',
-      chosenInstruments: []
+      chosenInstruments: [],
+      url: ''
     }
     this.handleChecked = this.handleChecked.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -27,7 +28,7 @@ export default class Registration extends Component {
   }
 
   handleSubmit (event) {
-    const { email, password, password_confirmation } = this.state
+    const { email, password, password_confirmation, url } = this.state
     let type;
     if(this.state.userType === true){
       type = 'STUDENT'
@@ -44,7 +45,8 @@ console.log("USERTYPE:::",type)
             email: email,
             password: password,
             password_confirmation: password_confirmation,
-            user_type: type
+            user_type: type,
+            url: url
           }
         },
         { withCredentials: true }
@@ -92,7 +94,8 @@ console.log("USERTYPE:::",type)
         },
       )
       .then(response => {
-        this.createUserInstruments(response.data)
+        this.createUserInstruments(response.data);
+        this.createResource(response.data)
         this.props.grabUserTypeData(response.data);
       })
       .catch(error => {
@@ -110,7 +113,7 @@ console.log("USERTYPE:::",type)
           instrument: inst.id,
           instructor: user.id
         })
-        .then(resp => console.log(resp.data))
+        .then(resp => console.log(resp))
       ))
     }
     else if(user.user.user_type === 'STUDENT'){
@@ -123,6 +126,13 @@ console.log("USERTYPE:::",type)
         .then(resp => console.log(resp.data))
       ))
     }
+  }
+
+  createResource = (instructor) => {
+    axios.post('http://localhost:3001/resources',
+    {
+      instructor: instructor.id
+    })
   }
 
   handleChecked () {
@@ -199,6 +209,14 @@ console.log("USERTYPE:::",type)
             onChange={this.handleChange}
             required
           />
+          <input
+            type='url'
+            name='url'
+            placeholder='Avatar URL'
+            value={this.state.url}
+            onChange={this.handleChange}
+            required
+          />
           <br />
           <label className='switch centered-element'>
             <input type='checkbox' onChange={this.handleChecked} />
@@ -206,6 +224,9 @@ console.log("USERTYPE:::",type)
             <h3 className='toggle-label-right'>Student</h3>
             <h3 className='toggle-label-left'>Instructor</h3>
           </label>
+
+
+
           <br />
           <button type='submit'>Register</button>
         </form>
