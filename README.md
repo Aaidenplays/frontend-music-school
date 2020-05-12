@@ -1,5 +1,1 @@
-# React/Redux/Router Starter Project
-
-> Provided for the students of the [Bottega Code School](https://bottega.tech/)
-
-*Fork from [es6-webpack2-starter](https://github.com/micooz/es6-webpack2-starter)*# frontend-music-school
+This project depends on a rails backend api that can be accessed at this url: https://github.com/Aaidenplays/music-school-backend
