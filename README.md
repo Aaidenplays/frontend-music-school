@@ -14,7 +14,6 @@ Included features:
   For authentication I use bcrypt to encrypt passwords.
   
   To use my app just clone this repo and the backend repo provided at the top. 
-  Then, paste the repos into your local machine. 
   Next, type `rails db:migrate` on the back-end repo then, `rails s -p 3001`
   Finally in the front-end repo type `npm install` then, `npm start`
   
